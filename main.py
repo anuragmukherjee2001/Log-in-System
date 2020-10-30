@@ -1,6 +1,9 @@
 import tkinter
 from tkinter import ttk
+from tkinter import messagebox
 from PIL import Image, ImageTk
+
+import pymysql
 
 class Registration:
     def __init__(self, root):
@@ -75,13 +78,13 @@ class Registration:
                         y = 100,
                         )    
 
-        first_name_entry = tkinter.Entry(
+        self.first_name_entry = tkinter.Entry(
                                     frame_1,
                                     font = ("Times New Roman", 15),  
                                     bg = "lightgray",                          
         )                                                        
 
-        first_name_entry.place(
+        self.first_name_entry.place(
                             x = 50, 
                             y = 130, 
                             width = 250,
@@ -102,13 +105,13 @@ class Registration:
                         y = 100,
                         )    
 
-        last_name_entry = tkinter.Entry(
+        self.last_name_entry = tkinter.Entry(
                                     frame_1,
                                     font = ("Times New Roman", 15),  
                                     bg = "lightgray",                          
         )                                                        
 
-        last_name_entry.place(
+        self.last_name_entry.place(
                         x = 370, 
                         y = 130, 
                         width = 250,
@@ -129,13 +132,13 @@ class Registration:
                     y = 170
                     )    
 
-        Email_Entry = tkinter.Entry(
+        self.Email_Entry = tkinter.Entry(
                                     frame_1,
                                     font = ("Times New Roman", 15),  
                                     bg = "lightgray",                          
         )                                                        
 
-        Email_Entry.place(
+        self.Email_Entry.place(
                         x = 50, 
                         y = 200, 
                         width = 250
@@ -156,13 +159,13 @@ class Registration:
                     y = 170
                     )    
 
-        contact_entry = tkinter.Entry(
+        self.contact_entry = tkinter.Entry(
                                     frame_1,
                                     font = ("Times New Roman", 15),  
                                     bg = "lightgray",                          
         )                                                        
 
-        contact_entry.place(
+        self.contact_entry.place(
                             x = 370,
                             y = 200,
                             width = 250
@@ -183,18 +186,18 @@ class Registration:
                                 y = 240,
                                 )    
 
-        Security_Question_box = ttk.Combobox(
+        self.Security_Question_box = ttk.Combobox(
                                     frame_1,
                                     font = ("Times New Roman", 12), 
                                     state = 'readonly',
                                     justify = tkinter.CENTER,                         
         )                                                        
 
-        Security_Question_box['values'] = ("Select", "Your First School", "Your Favourite book", "Your Pet name", "Your Best Friend", "Your Favourite Subject")
+        self.Security_Question_box['values'] = ("Select", "Your First School", "Your Favourite book", "Your Pet name", "Your Best Friend", "Your Favourite Subject")
 
-        Security_Question_box.place(x = 50, y = 270, width = 250)
+        self.Security_Question_box.place(x = 50, y = 270, width = 250)
 
-        Security_Question_box.current(0)
+        self.Security_Question_box.current(0)
 
         # Security answer
 
@@ -211,13 +214,13 @@ class Registration:
                             y = 240,
                             )    
 
-        Security_answer_Entry = tkinter.Entry(
+        self.Security_answer_Entry = tkinter.Entry(
                                     frame_1,
                                     font = ("Times New Roman", 15),  
                                     bg = "lightgray",                          
         )                                                        
 
-        Security_answer_Entry.place(
+        self.Security_answer_Entry.place(
                                 x = 370,
                                 y = 270,
                                 width = 250,
@@ -239,13 +242,13 @@ class Registration:
                         y = 310,
                         )    
 
-        Password_Entry = tkinter.Entry(
+        self.Password_Entry = tkinter.Entry(
                                     frame_1,
                                     font = ("Times New Roman", 15),  
                                     bg = "lightgray",                          
         )                                                        
 
-        Password_Entry.place(
+        self.Password_Entry.place(
                             x = 50,
                             y = 340,
                             width = 250,
@@ -266,13 +269,13 @@ class Registration:
                             y = 310,
                             )    
 
-        confirm_password_Entry = tkinter.Entry(
+        self.confirm_password_Entry = tkinter.Entry(
                                     frame_1,
                                     font = ("Times New Roman", 15),  
                                     bg = "lightgray",                          
         )                                                        
 
-        confirm_password_Entry.place(
+        self.confirm_password_Entry.place(
                                 x = 370,
                                 y = 340,
                                 width = 250,
@@ -280,11 +283,14 @@ class Registration:
 
         # creating the checkbox
 
+        self.check_done = tkinter.IntVar()
+
         check_box = tkinter.Checkbutton(
                                 frame_1,
                                 text = "I agree with the terms and conditions",
                                 onvalue = 1,
                                 offvalue = 0,
+                                variable = self.check_done,
                                 bg = "white",
                                 font = ("Times New Roman", 12),
                                 )
@@ -295,7 +301,7 @@ class Registration:
                     )  
 
         # Register button                             
-
+                          
         Register_button = tkinter.Button(
                                 frame_1,
                                 text = "Register",
@@ -303,6 +309,7 @@ class Registration:
                                 bg = "blue",
                                 fg = "white",
                                 cursor = "hand2",
+                                command = self.data_entry,
                                 )  
 
         Register_button.place(
@@ -326,7 +333,66 @@ class Registration:
                         y = 460,
                         width = 150,
                         height = 40,
-                        )   
+                        ) 
+
+    def data_entry(self):
+      if(self.first_name_entry.get() == "" or self.Email_Entry.get()=="" or self.contact_entry.get() == "" or self.Security_Question_box.get() == "Select" or self.Security_answer_Entry.get() == "" or self.Password_Entry.get() == "" or self.confirm_password_Entry.get() == ""):
+        messagebox.showerror(
+                      "Error",
+                      "All Fields are Required",
+                      parent = self.root,
+                      )
+
+      elif(self.Password_Entry.get() != self.confirm_password_Entry.get()):
+        messagebox.showerror(
+                        "Password Error",
+                        "Password and confirm password are not matched",
+                        parent = root,
+                        )
+
+      elif(self.check_done.get() == 0):
+        messagebox.showerror(
+                      "Error",
+                      "Please agree with our terms and conditions", 
+                      parent = root,
+                      )                  
+
+      elif(not (self.contact_entry.get() > "0" and self.contact_entry.get() < "9")):
+        messagebox.showerror(
+                      "Password Error",
+                      "Number is not correct",
+                      parent = root,
+                    ) 
+
+      else:
+
+        try:
+          con = pymysql.connect(host = "localhost", user = "root", password = "", database = "employee")
+          cur = con.cursor()
+          
+          cur.execute("select * from employee where email = %s", self.Email_Entry.get())
+          row = cur.fetchone()
+          print(row)
+
+          cur.execute("insert into employee (first_name,last_name,Email,contact,Security_Question,Security_answer,Password) values (%s,%s,%s,%s,%s,%s,%s)",
+                    (self.first_name_entry.get(),
+                     self.last_name_entry.get(),
+                     self.Email_Entry.get(),
+                     self.contact_entry.get(),
+                     self.Security_Question_box.get(),
+                     self.Security_answer_Entry.get(),
+                     self.Password_Entry.get()
+                    )
+          )
+
+          con.commit()
+          con.close()
+          
+          messagebox.showinfo("Success", "Registration Successful", parent = root)                   
+
+        except Exception as ex:
+          messagebox.showerror("Error", f"Error due to:  {str(ex)}", parent = self.root)
+
 
 root = tkinter.Tk()
 
