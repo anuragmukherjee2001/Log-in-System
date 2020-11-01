@@ -325,6 +325,7 @@ class Registration:
                                 font = ("Helvitica", 13),
                                 bg = "blue",
                                 fg = "white",
+                                command = self.redirect_to_login,
                                 cursor = "hand2",
                                 ) 
 
@@ -334,6 +335,16 @@ class Registration:
                         width = 150,
                         height = 40,
                         ) 
+
+    def clear_all(self):
+      self.first_name_entry.delete(0, tkinter.END)                    
+      self.last_name_entry.delete(0, tkinter.END)                    
+      self.Email_Entry.delete(0, tkinter.END)                    
+      self.contact_entry.delete(0, tkinter.END)                    
+      self.Security_Question_box.current(0)                    
+      self.Security_answer_Entry.delete(0, tkinter.END)                    
+      self.Password_Entry.delete(0, tkinter.END)                    
+      self.confirm_password_Entry.delete(0, tkinter.END)                    
 
     def data_entry(self):
       if(self.first_name_entry.get() == "" or self.Email_Entry.get()=="" or self.contact_entry.get() == "" or self.Security_Question_box.get() == "Select" or self.Security_answer_Entry.get() == "" or self.Password_Entry.get() == "" or self.confirm_password_Entry.get() == ""):
@@ -367,31 +378,57 @@ class Registration:
       else:
 
         try:
-          con = pymysql.connect(host = "localhost", user = "root", password = "", database = "employee")
+          con = pymysql.connect(
+                          host = "localhost", 
+                          user = "root", 
+                          password = "", 
+                          database = "employee"
+                          )
+
           cur = con.cursor()
           
           cur.execute("select * from employee where email = %s", self.Email_Entry.get())
           row = cur.fetchone()
-          print(row)
 
-          cur.execute("insert into employee (first_name,last_name,Email,contact,Security_Question,Security_answer,Password) values (%s,%s,%s,%s,%s,%s,%s)",
-                    (self.first_name_entry.get(),
-                     self.last_name_entry.get(),
-                     self.Email_Entry.get(),
-                     self.contact_entry.get(),
-                     self.Security_Question_box.get(),
-                     self.Security_answer_Entry.get(),
-                     self.Password_Entry.get()
-                    )
-          )
+          if row != None:
+            messagebox.showerror(
+                          "Error",
+                          "User already exists. Please try with another email.",
+                          parent = self.root,
+                          )
+          else:  
+            cur.execute("insert into employee (first_name,last_name,Email,contact,Security_Question,Security_answer,Password) values (%s,%s,%s,%s,%s,%s,%s)",
+                      (self.first_name_entry.get(),
+                      self.last_name_entry.get(),
+                      self.Email_Entry.get(),
+                      self.contact_entry.get(),
+                      self.Security_Question_box.get(),
+                      self.Security_answer_Entry.get(),
+                      self.Password_Entry.get()
+                      )
+            )
 
-          con.commit()
-          con.close()
+            con.commit()
+            con.close()
           
-          messagebox.showinfo("Success", "Registration Successful", parent = root)                   
+            messagebox.showinfo(
+                          "Success", 
+                          "Registration Successful", 
+                          parent = root
+                          )
+
+            self.clear_all()                   
 
         except Exception as ex:
-          messagebox.showerror("Error", f"Error due to:  {str(ex)}", parent = self.root)
+          messagebox.showerror(
+                            "Error", 
+                            f"Error due to:  {str(ex)}", 
+                            parent = self.root
+                            )
+
+    def redirect_to_login(self):
+      self.root.destroy()
+      import login      
 
 
 root = tkinter.Tk()
