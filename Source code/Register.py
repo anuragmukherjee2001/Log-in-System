@@ -8,8 +8,9 @@ import pymysql
 class Registration:
     def __init__(self, root):
         self.root = root
-        self.root.title("Registration Form")
-        self.root.geometry("1650x700+0+0")
+        self.root.title("Registration Form".center(370))
+        self.root.geometry("1250x700+0+0")
+        self.root.resizable(0,0)
         self.root.config(bg = "white")
 
         #setting the Images
@@ -193,9 +194,20 @@ class Registration:
                                     justify = tkinter.CENTER,                         
         )                                                        
 
-        self.Security_Question_box['values'] = ("Select", "Your First School", "Your Favourite book", "Your Pet name", "Your Best Friend", "Your Favourite Subject")
+        self.Security_Question_box['values'] = (
+                                              "Select",
+                                              "Your First School",
+                                              "Your Favourite book",
+                                              "Your Pet name", 
+                                              "Your Best Friend", 
+                                              "Your Favourite Subject",
+                                              )
 
-        self.Security_Question_box.place(x = 50, y = 270, width = 250)
+        self.Security_Question_box.place(
+                                        x = 50, 
+                                        y = 270, 
+                                        width = 250,
+                                        )
 
         self.Security_Question_box.current(0)
 
@@ -226,7 +238,6 @@ class Registration:
                                 width = 250,
                                 )
 
-        # Row 4
         #Password
 
         Password = tkinter.Label(

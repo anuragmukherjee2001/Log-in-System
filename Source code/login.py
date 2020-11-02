@@ -9,7 +9,8 @@ class login:
     def __init__(self, root):
         self.root = root
         self.root.title("Login Window".center(370))
-        self.root.geometry("1350x700+0+0")
+        self.root.geometry("1250x700+0+0")
+        self.root.resizable(0,0)
         self.root.config(bg = "dark blue")
 
         self.left = ImageTk.PhotoImage(file = "Images/bg.jpg")
@@ -37,12 +38,12 @@ class login:
                     height = 500,
                   )
 
+        # Creating the frame
+
         frame_1 = tkinter.Frame(
                                 self.root,
                                 bg = "white",
                                 )
-
-        # Creating the frames
 
         frame_1.place(
                     x = 480,
@@ -76,7 +77,10 @@ class login:
                         fg = "green",
                         )
 
-        title.place(x = 50, y = 30)  
+        title.place(
+                    x = 50,
+                    y = 30
+                    )  
 
         # email
 
@@ -158,6 +162,24 @@ class login:
                         height = 30,
                         )
 
+        forgot_password_button = tkinter.Button(
+                                frame_1,
+                                text = "Forget Password?",
+                                font = ("Helvitica", 13),
+                                bg = "white",
+                                bd = 0,
+                                fg = "red",
+                                command = self.redirect_to_forget_password,
+                                cursor = "hand2",
+                                ) 
+
+        forgot_password_button.place(
+                        x = 240,
+                        y = 330,
+                        width = 200,
+                        height = 30,
+                        )                
+
     def login_system(self):
         if self.email_entry.get() == "" or self.password_entry.get() == "":
             messagebox.showerror("Error", "All fields are required", parent = self.root)
@@ -199,13 +221,17 @@ class login:
 
     def redirect_to_register(self):
         self.root.destroy()
-        import Register                
+        import Register  
 
-#     def clear(self):
-#         self.email_entry.delete(0, tkinter.END)                          
-#         self.password_entry.delete(0, tkinter.END)                          
-
-
+    def redirect_to_forget_password(self):
+        if self.email_entry.get() == "":
+            messagebox.showerror(
+                            "Error", 
+                            "Enter the valied email to reset your password", 
+                            parent = root,
+                            )
+        else:
+            import forget_password                  
 
 root = tkinter.Tk()
 
