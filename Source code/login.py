@@ -210,14 +210,18 @@ class login:
                     messagebox.showinfo(
                                     "SUCCESS", 
                                     "WELCOME", 
-                                    parent = root
+                                    parent = root,
                                     )
 
                 con.close()                                                  
 
 
             except Exception as ex:
-                messagebox.showerror("Error", f"Error Due to: {str(ex)}", parent = self.root)
+                messagebox.showerror(
+                                "Error", 
+                                f"Error Due to: {str(ex)}", 
+                                parent = self.root,
+                                )
 
     def redirect_to_register(self):
         self.root.destroy()
@@ -230,8 +234,45 @@ class login:
                             "Enter the valied email to reset your password", 
                             parent = root,
                             )
-        else:
-            import forget_password                  
+
+        else:  
+            try:
+                con = pymysql.connect(
+                                    host = "localhost",
+                                    user = "root",
+                                    password = "",
+                                    database = "employee",
+                                    )
+
+                cur = con.cursor()
+                cur.execute("select * from employee where Email = %s", self.email_entry.get())
+
+                row = cur.fetchone()
+                 
+                if row == None:
+                    messagebox.showerror(
+                                    "Error",
+                                    "Please enter a valied email address to reset the password",
+                                    parent = self.root
+                                    )                  
+
+                else:
+                    con.close()                                                  
+                    import forget_password
+                    # if forget_password.password.Security_Question_box.get()=="Select":
+                    #     print("aaaa")
+
+
+
+            except Exception as ex:
+                messagebox.showerror("Error", f"Error Due to: {str(ex)}", parent = self.root) 
+
+    # def logic_of_forget_password():
+    #     if self.Security_
+        
+            
+        
+                              
 
 root = tkinter.Tk()
 

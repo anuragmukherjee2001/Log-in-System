@@ -2,6 +2,7 @@ import tkinter
 from tkinter import ttk
 from tkinter import messagebox
 from PIL import Image, ImageTk
+# import login
 
 import pymysql
 
@@ -10,7 +11,7 @@ class password:
         self.root = root
         self.root.title("Forget Password".center(80))
         self.root.geometry("350x480+400+50")
-        # self.root.resizable(0,0)
+        self.root.resizable(0,0)
         self.root.config(bg = "white")
         self.root.focus_force()
         self.root.grab_set()    
@@ -148,7 +149,7 @@ class password:
                                 font = ("Helvitica", 15),
                                 bg = "blue",
                                 fg = "white",
-                                # command = self.login_system,
+                                command = self.forget_password_logic,
                                 cursor = "hand2",
                                 ) 
 
@@ -157,8 +158,37 @@ class password:
                         y = 410,
                         width = 180,
                         height = 40,
-                        )                                                                                 
+                        )  
 
+                                                                           
+    def forget_password_logic(self):
+        if self.Security_Question_box.get() == "Select" or self.Security_answer_Entry.get() == "" or self.new_password_Entry.get() == "" or self.confirm_password_Entry.get() == "":
+            messagebox.showerror(
+                            "Error", 
+                            "All fields are required", 
+                            parent = self.root,
+                            )
+
+        else:
+            con = pymysql.connect(
+                                    host = "localhost",
+                                    user = "root",
+                                    password = "",
+                                    database = "employee",
+                                    )
+
+            cur = con.cursor()
+            cur.execute("select * from employee where Email = %s", login.email_entry.get())
+
+            row = cur.fetchone()
+                 
+            if row == None:
+                messagebox.showerror(
+                                    "Error",
+                                    "Please enter a valied email address to reset the password",
+                                    parent = self.root
+                                    )                    
+            
 
 root = tkinter.Tk()
 
